@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>Yaf框架Model封装之 CURD</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>Yaf框架Model封装之 CURD</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="where.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="m.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				此Db\Mysql对数据库的增删改查(CURD)进行了封装,可以快速拼接想要组合的SQL语句，提升工作效率。
+			</p>
+			
+			<div class="filename">
+				读取操作
+			</div>
+			<code class="prettyprint linenums lang-php">
+				//[情况一]<br>
+				M('User')->find(1);<br>
+				//SELECT * FROM `hi_user` WHERE uid='1' LIMIT 0,1<br>
+				<br>
+				//[情况二]<br>
+				M('User')->field('username,age')->select();<br>
+				//SELECT username,age FROM `hi_user`<br>
+				<br>	
+				//[情况三]<br>
+				M('User')->field('username,age')->where(array('uid'=>array('gt',10)))->select();<br>
+				//SELECT username,age FROM `hi_user` WHERE uid > '10'<br>
+				<br>
+				//[情况四]<br>
+				M('User')->field('username,age')->where('uid>3')->limit('3,10')->order('uid desc')->select();<br>
+				//SELECT username,age FROM `hi_user` WHERE uid>3 ORDER BY uid desc LIMIT 3,10<br>
+
+				<br>
+				//[情况五]<br>
+				M('User')->where('uid=1')->join('hi_article','uid=artid','LEFT')->select();<br>
+				//SELECT * FROM `hi_user` LEFT JOIN `hi_article` ON uid=artid WHERE uid=1<br>
+
+				<br>
+				//[情况六]<br>
+				 M()->query('select * from hi_user where uid&gt;3 and uid &lt;100 order by uid desc');<br>
+				//select * from hi_user where uid&gt;3 and uid &lt;100 order by uid desc
+			</code>
+
+			<div class="filename">
+				写库操作
+			</div>
+			<code class="prettyprint linenums lang-php">
+				//[情况一]<br>
+				$data['username'] = '小花';<br>
+        		$data['age'] = 20;<br>
+        		$data['email'] = 'xxx@xxx.com';<br>
+        		M('User')->insert($data);<br>
+        		//INSERT INTO `hi_user`(`username`,`age`) VALUES ('小花','20')<br>
+        		//返回值为表的自增id;若表无自增id，则返回0。<br>
+        		<br>
+				//[情况二]<br>
+        		$data['username'] = '小明';<br>
+        		$data['age'] = 20;<br>
+        		$data['email'] = 'xxx@xxx.com';<br>
+        		$data['uid'] = 50;<br>
+        		M('User')->insert($data,1);<br>
+        		//REPLACE INTO `hi_user`(`username`,`age`,`uid`) VALUES ('小明','20','50')<br>
+        		//返回值同上<br>
+        		<br>
+        		//[情况三]<br>
+        		M()->exec("insert into hi_user (username,age) values ('灰太狼',30)",'insert');<br>
+        		//insert into hi_user (username,age) values ('灰太狼',30)<br>
+        		//注意如果用exec()执行原生的sql时，如果执行的insert语句。指定第二个参数为insert,则返回自增id;否则返回影响的记录行数
+			</code>
+
+			<div class="filename">
+				更新操作
+			</div>
+			<code class="prettyprint linenums lang-php">
+				//[情况一]<br>
+				$data['uid'] = 51;//注此字段为数据表主键<br>
+        		$data['username'] = '路人庚';<br>
+        		$data['email'] = 'gongwalker@gmail.com';<br>
+        		M('User')->update($data);<br>
+        		//UPDATE `hi_user` SET `uid`='51',`username`='路人庚' WHERE uid='51'<br>
+        		//说明如果没有指定where()方法且预更新的data数据里包含主键,则主键为where条件<br>
+        		//注:返回值为影响的记录行数,执行失败返回false<br>
+
+        		<br>
+				//[情况二]<br>
+				$data['uid'] = 8;<br>
+        		$data['username'] = '路人庚';<br>
+        		$data['email'] = 'gongwalker@gmail.com';<br>
+				M('User')->where(array('uid'=>537,'username'=>'阿三'))->update($data);<br>
+				//UPDATE `hi_user` SET `uid`='8',`username`='路人庚' WHERE uid = '537' AND username = '阿三'<br>
+				//说明,若指定了where()方法,即便$data里即便包含主键，也不会为where条件的组装<br>
+
+				<br>
+				//[情况三]<br>
+				M()->exec("update hi_user set username='李二' where uid = 529");<br>
+				//update hi_user set username='李二' where uid = 529<br>
+
+				<br>
+        		//[情况四]<br>
+        		$data['username'] = '路人庚';<br>
+        		$data['email'] = 'gongwalker@gmail.com';<br>
+        		M('User')->update($data);<br>
+        		UPDATE `hi_user` SET `username`='路人庚' WHERE<br>
+        		//UPDATE `hi_user` SET `username`='路人庚' WHERE<br>
+        		//由于此更新语句,没有指定where()方法，且$data也不存在表主键。所以为了避免危险操作。此mysql封装类不允许执行<br>
+        		//此语句返回为false
+        		
+			</code>
+
+			<div class="filename">
+				删除操作
+			</div>
+			<code class="prettyprint linenums lang-php">
+				//[情况一]<br>
+				M('User')->delete(537);<br>
+				//DELETE FROM `hi_user` WHERE uid='537'<br>
+				//返回删除的行总数<br>
+				<br>	
+				//[情况二]<br>
+				M('User')->where(array('username'=>array('like','小%')))->delete();<br>
+				//DELETE FROM `hi_user` WHERE username LIKE '小%'<br>
+				<br>
+
+				//[情况三]<br>
+				M('User')->delete();<br>
+				//DELETE FROM `hi_user` WHERE<br>
+				//由于delete()方法中没有指定主键，且没有指定where()方法。所以为了避免危险操作。此mysql封装类不允许执行<br>
+
+			</code>
+			<div class="tips">
+				尽量用Db\Mysql，提供的方法组装sql语句。这样的好使是，此类对 危险操作 做了禁止，和进行了数据安装过滤
+			</div>
+
+			<div class="warning">
+				[注意]<br>
+				insert($data)操作与update($data)操作;不在数据表的字段。会被自动过滤掉。<br>
+				insert($data)操作与update($data)操作;对$data的数据进行了sql关键字自动过滤<br>
+			</div>
+
+			<div class="warning">
+				[开发建议]<br>
+				在进行sql组装，开发人员，应该用$this->getlastsql();来打印组装后的sql语句。来确保组装sql的正确性。
+			</div>
+		</div>
+	</body>
+</html>

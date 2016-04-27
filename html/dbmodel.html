@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>Yaf框架之Model封装</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>Yaf框架之Model封装</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="application.ini.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="where.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>对Yaf的数据库操作进行了model封装,提供了更加便捷地操作；且对一些有安全隐患的SQL操作做了禁止。</p>
+			<div class="tips">
+				若只需要Db/Mysql基类功能[如select()、insert()、update()、delete()等]就可以完成对业务的处理，则没有必要单独声明一个空的model类<br>
+				换句话说，只需要对某个表有特定的封装操作，DB类没有提供，才去定定一个model类去完成
+			</div>
+			<p>如下代码段便可,定义一个model类 <div class="cli">文件 application/models/User.php</div></p>
+			
+			<code class="prettyprint linenums lang-php">
+				<?php<br>
+					class UserModel extends Db\Mysql{<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;//如果不定表名,则系统认为当前类名为表名<br>
+					    &nbsp;&nbsp;&nbsp;&nbsp;public $tablename = 'user';<br><br>
+
+					    &nbsp;&nbsp;&nbsp;&nbsp;//指定uid,得到某用户信息<br>
+					    &nbsp;&nbsp;&nbsp;&nbsp;public function getUserInfo($id){<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$info = self::find($id);<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $info;<br>
+					    &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+					    &nbsp;&nbsp;&nbsp;&nbsp;//添加用户<br>
+					    &nbsp;&nbsp;&nbsp;&nbsp;public function addUser($map){<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$re = self::insert($map);<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $re;<br>
+					    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+					}    
+			</code>
+
+			<div class="warning">
+				[注意]<br>
+				<code class="prettyprint linenums lang-php">
+				public $tablename = 'user';
+				</code>
+				为当前的model类对应数据库的 user 表(不需要加表前缀)<br>
+				可以省略不写，如果不写的话，就以当前类名xxxModel中的xxx做为对应表<br>
+			</div>
+			<div class="tips">
+				所以，我们在定义model类名的时候，尽量与数据库中的表名保持一致；这样就可以少写一行指定表名的代码啦!!!<br>
+				当然，如果想定义一个model类，但类名与数据库表名不一致，那么我们可以手动指定 
+				<code class="prettyprint linenums lang-php">public $tablename = 'yourTableName'</code>
+			</div>
+
+			<p>
+			在控制器如下代码段便可对model进行操作 <div class="cli">文件 application/controllers/Index.php</div>
+			</p>
+			<code class="prettyprint linenums lang-php">
+				<?php<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;class IndexController extends CommonController {<br>
+					    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public function indexAction(){<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$info = M('User')->getUserInfo(5);//打印uid为5的用户信息<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo M('User')->getlastsql();//调试所用,打印执行的sql语句<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dump($info);//打印查到的结果集<br>
+					        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showTrace();//查看页面的警告信息,开发时调试所用<br>
+					     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;}   
+			</code>
+		</div>
+	</body>
+</html>

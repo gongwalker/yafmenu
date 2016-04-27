@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>安全过滤 $this->I() 方法</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>安全过滤 $this->I() 方法</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="i.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="debug.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				在控制器control层的方法中调用$this->I($input,$default,$type);可以对用户输入的数据进行过滤
+			<p>
+			<div class="tips">
+				<p>
+					参数描述<br>
+					$input 可以支持的格式为 get. get.name post post. 等<br>
+					$default 如果$input的值不存在，则把$default指定的值给返回<br>
+					$type 过滤的类型 支持 int float string bool 等<br>
+				</p>
+			</div>
+
+			<div class="warning">
+				[注意]<br>
+				如果type指定为"null"，则不进行过滤
+			</div>
+			
+			<code class="prettyprint linenums lang-php">
+				//[使用方法如下]<br>
+     			I('id',0,'int'); //将从yaf框架url解析参数,POST, GET, Cookie, Server依次寻找 键为id的值<br>
+     			I('post.name','','string'); //获取$_POST['name']且进行 string过滤<br>
+     			I('post.') //批量获取$_POST值且进行 string过滤<br>
+     			I('server.','','null') //批量获取$_SERVER值,不进行过滤
+			</code>
+		</div>
+	</body>
+</html>

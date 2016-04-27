@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>Smarty封装使用说明</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>Smarty封装使用说明</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="response.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				对Yaf模板引擎用smarty进行了封装，在模板页面编码工作中，可以提升工作效率。
+			</p>
+			
+			<div class="filename">
+				使用说明如下
+			</div>
+			<code class="prettyprint linenums lang-php">
+			    public function smartyAction(){<br>
+			        &nbsp;&nbsp;&nbsp;&nbsp;$this->assign('content','hello smarty'); //对模板引擎进行变量赋值<br>
+			        &nbsp;&nbsp;&nbsp;&nbsp;$this->show('smarty/smarty'); //指定要渲染的模板<br>
+			    }
+			</code>
+			<div class="tips">
+				$this->show()方法，指定模板文件时，不需要加模板文件后缀名。<br>
+				$this->show()方法，根据参数形式不同，会去找不同模板文件;使用规则如下<br>
+			</div>
+			<div class="warning">
+				[使用说明]<br>
+				$this->show(); //去当前的Controller/Action的路径去找模板文件<br>
+				$this->show('smarty'); //去当前的Controller/smarty的路径去找模板文件<br>
+				$this->show('index/smarty'); //去index/smarty的路径去找模板文件<br>
+			</div>
+		</div>
+	</body>
+</html>

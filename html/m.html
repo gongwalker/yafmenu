@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>便捷函数之 M() 方法</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>便捷函数之 M() 方法</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="curd.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="c.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				M($modelName)方法进行快速实例化数据库模型类<br>
+				若数据库模型类不存在，则找对应的表名进行model实例化。<br>
+				
+			</p>
+			<div class="tips">
+				若对应的模型类和表名都不存在;则会产生一条 WARNING 级别的错误警告,提示表名不存在。<br>
+			</div>
+			<div class="warning">
+				[注意]<br>
+				M()可以直接对Db\Mysql()模型的基类进行实现化
+			</div>
+			
+			
+			<code class="prettyprint linenums lang-php">
+				//[情况一]<br>
+				$Model = M('User');<br>
+				//优先去application/models/User.php 进行实现化.若User.php模型类不存在。则直接实现化user数据表模型<br>
+				<br>
+
+				//[情况二]<br>
+				$Model = M();<br>
+				//直接实例化 Db\Mysql()类
+			</code>
+
+			
+		</div>
+	</body>
+</html>

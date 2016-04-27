@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>Yaf框架封装说明手册</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>Yaf框架封装说明手册</h1>
+			<div class="page">
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="index.php.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<h2>目录</h2>
+			<div style="padding-left:50px;">
+				<ul>
+					<li>Yaf框架之入口文件</li>
+					<ul style="margin-left:30px;">
+						<li><a href="index.php.html">Yaf框架之入口文件index.php</a></li>
+					</ul>
+
+					<li>Yaf框架之配置文件</li>
+					<ul style="margin-left:30px;">
+						<li><a href="application.ini.html">配置文件之application.ini</a></li>
+					</ul>
+
+					<li>Yaf框架之Model封装</li>
+					<ul style="margin-left:30px;">
+						<li><a href="dbmodel.html">Yaf框架之Model封装</a></li>
+						<li><a href="where.html">Yaf框架Model封装之 where()方法</a></li>
+						<li><a href="curd.html">Yaf框架Model封装之 CURD</a></li>
+					</ul>
+
+					<li>Yaf封装之便捷函数</li>
+					<ul style="margin-left:30px;">
+						<li><a href="m.html">便捷函数之 M() 方法</a></li>
+						<li><a href="c.html">便捷函数之 C() 方法</a></li>
+						<li><a href="dump.html">便捷函数之 dump() 方法</a></li>
+					</ul>
+
+					<li>Yaf封装之用户输入安全过滤</li>
+					<ul style="margin-left:30px;">
+						<li><a href="i.html">安全过滤 $this->I() 方法</a></li>
+					</ul>
+
+					<li>Yaf封装之开发调试</li>
+					<ul style="margin-left:30px;">
+						<li><a href="debug.html">开发调试建议</a></li>
+					</ul>
+
+					<li>Yaf封装之接口返回</li>
+					<ul style="margin-left:30px;">
+						<li><a href="response.html">接口返回 $this->response() 方法</a></li>
+					</ul>
+
+					<li>Yaf封装之模板引擎Smarty</li>
+					<ul style="margin-left:30px;">
+						<li><a href="smarty.html">Smarty封装使用说明</a></li>
+					</ul>
+				</ul>
+			</div>
+			<div class="warning">
+				<br>
+				Yaf版本为2.3.4 stable版<br>
+				PHP版本为5.6<br>
+				请开启Yaf框架对命名空间的支持
+			</div>
+		</div>
+	</body>
+</html>

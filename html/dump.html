@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>便捷函数之 dump() 方法</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>便捷函数之 dump() 方法</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="c.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="i.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				输出某个变量是开发过程中经常会用到的调试方法，除了使用php内置的var_dump和print_r之外，还封装内了一个对浏览器友好的dump方法，用于输出变量的信息到浏览器查看。
+			<p>
+			<div class="tips">
+				<p>
+					参数描述<br>
+					var（必须）	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要输出的变量，支持所有变量类型<br>
+					echo（可选）	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否直接输出，默认为true，如果为false则返回但不输出<br>
+					label（可选）	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;变量输出的label标识，默认为空<br>
+					strict（可选）	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;输出变量类型，默认为true，如果为false则采用print_r输出<br>
+					如果echo参数为false 则返回要输出的字符串
+				</p>
+			</div>
+
+			<div class="warning">
+				[注意]<br>
+				如果echo参数为false 则返回要输出的字符串
+			</div>
+			
+			<code class="prettyprint linenums lang-php">
+				//[使用方法如下]<br>
+				$str = 'hello word';<br>
+				dump($str);<br>
+
+				<br>
+				$array = ['a'=>1,'b'=>2]<br>
+				dump($array);<br>
+				<br>
+
+				$obj = new xxx();<br>
+				dump($obj);
+			</code>
+
+			
+
+			
+		</div>
+	</body>
+</html>

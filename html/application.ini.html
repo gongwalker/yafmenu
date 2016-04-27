@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>配置文件之application.ini</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>配置文件之application.ini</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="index.php.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"</a>
+				<a title="下一篇" class="next" href="dbmodel.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<div class="warning">
+				注意<br>
+				[common] 为各环境(生产环境，测试环境) 公用节点<br>
+				[product] 为生产环境 所加载节点<br>
+				[develop] 为开发环境 所加载节点<br>
+			</div>
+			<div class="tips">节点加载判断依据为入口文件index.php对常量 CUR_ENVIRON 的定义</div>
+			<code class="prettyprint linenums lang-php">
+				; 通用配置<br>
+				[common]<br>
+				;支持直接写PHP中的已定义常量<br>
+				application.directory=APP_PATH "/application/"<br>
+				application.dispatcher.catchException = TRUE<br>
+				application.view.ext="html"<br>
+				application.modules="index"<br>
+				<br>	
+				;smarty-前台(wap页)<br>
+				smarty.wap.left_delimiter   = "&lt;{"<br>
+				smarty.wap.right_delimiter  = "}&gt;"<br>
+				smarty.wap.template_dir     = APP_PATH "/application/views/"<br>
+				<br>
+				;smarty-后台(admin管理后台)
+				smarty.admin.left_delimiter   = "<{"<br>
+				smarty.admin.right_delimiter  = "}>"<br>
+				smarty.admin.template_dir     = APP_PATH "/application/modules/Admin/views/"<br>
+				;smarty.caching = 0;<br>
+				;smarty.cache_lifetime = 600;<br>
+				<br>
+				<br>
+				; 生产环境配置<br>
+				[product : common]<br>
+				;数据库配置<br>
+				;数据库缓存(存放表字段的缓存文件)路径<br>
+				db.cache.fields=APP_PATH "/cache_product/db"<br>
+				;数据库连接配置信息<br>
+				;数据库一(主业务数据库)<br>
+				db.default.dsn="mysql:host=localhost:3306;dbname=maindb"<br>
+				db.default.username="homestead"<br>
+				db.default.password="secret"<br>
+				db.default.table_prefix="hi_"<br>
+				db.default.charset="utf8mb4"<br>
+				;数据库二(统计数据库)<br>
+				db.tongji.dsn="mysql:host=localhost:3306;dbname=tongji"<br>
+				db.tongji.username="homestead"<br>
+				db.tongji.password="secret"<br>
+				db.tongji.table_prefix="tj_"<br>
+				db.tongji.charset="utf8mb4"<br>
+				<br>
+				;smarty缓存目录定义<br>
+				smarty.admin.compile_dir=APP_PATH "/cache_product/smarty/templates_c/admin"<br>
+				smarty.admin.cache_dir=APP_PATH "/cache_product/smarty/templates_d/admin"<br>
+				<br>
+				;php错误日志文件定义<br>
+				log.php_file=APP_PATH "/cache_product/log"<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				; 开发环境配置<br>
+				[develop : common]<br>
+				;数据库配置<br>
+				;数据库缓存(存放表字段的缓存文件)路径<br>
+				db.cache.fields=APP_PATH "/cache_develop/db"<br>
+				;数据库连接配置信息<br>
+				;数据库一<br>
+				db.default.dsn="mysql:host=localhost:3306;dbname=maindb"<br>
+				db.default.username="homestead"<br>
+				db.default.password="secret"<br>
+				db.default.table_prefix="hi_"<br>
+				db.default.charset="utf8mb4"<br>
+				;数据库二<br>
+				db.tongji.dsn="mysql:host=localhost:3306;dbname=tongji"<br>
+				db.tongji.username="homestead"<br>
+				db.tongji.password="secret"<br>
+				db.tongji.table_prefix="tj_"<br>
+				db.tongji.charset="utf8mb4"<br>
+				<br>
+				;smarty缓存目录定义<br>
+				smarty.admin.compile_dir= APP_PATH "/cache_develop/smarty/templates_c/admin"<br>
+				smarty.admin.cache_dir=APP_PATH "/cache_develop/smarty/templates_d/admin"<br>
+				<br>
+				;php错误日志文件定义<br>
+				log.php_file=APP_PATH "/cache_develop/log"<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				; 测试环境配置配置(预留)<br>
+				[test : common]
+			</code>
+			
+		</div>
+	</body>
+</html>

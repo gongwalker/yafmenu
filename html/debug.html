@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>开发调试建议</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>开发调试建议</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="dump.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="response.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				封装后现在所有的 警告 都由 自定义函数yafErrorHandler()进行捕捉且赋值于$GLOBALS['error']变量。所以页面看不到任何警告级别。<br>	
+			</p>
+
+			<div class="tips">
+				开发环境只能看到，页面只能看到报错提示（比如语法错误）。<br>
+				生产环境，则把报错（比如语法错误）。写到日志文件中(以天为单位进行新建日记文件进行记录)。<br>
+
+				如果想在开发环境，打印当前页的警告信息。调用showTrace()方法<br>
+			</div>
+
+			<div class="warning">
+				[建议]<br>
+				建议在开发过程，在控制器方法中调用 showTrace() 来显示，当前页面的警告信息。
+			</div>
+			
+			
+			<code class="prettyprint linenums lang-php">
+				$info = M('article')->insert(array('title'=>'jim'));<br>
+        		dump($info);<br>
+        		//建议在开发过程中使用此方法查看警告信息<br>
+        		$sql = M('article')->getlastsql();<br>
+        		echo $sql;<br>
+        		//建议在开发过程中使用此函数查看警告信息<br>
+        		showTrace();
+			</code>
+	</body>
+</html>

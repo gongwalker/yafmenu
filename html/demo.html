@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>Yaf数据库封装类</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>Yaf数据库封装 之 where方法</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="0.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"</a>
+				<a title="下一篇" class="next" href="2.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<code class="prettyprint linenums lang-php">
+				C('X','X');//注释<br>
+				C('X','X');<br>
+				C('X','X');<br>
+				if(a==b){<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;echo 'xxx';<br>
+				}<br>
+			</code>
+			还可以这样干
+			<div class="warning">xxxx</div>
+			<div class="tips">yyyy</div>
+			<code class="prettyprint linenums lang-php">C('DATA_CACHE_TIME','60');</code>
+
+		</div>
+		<div class="book-footer">
+			<div class="page">
+				<a title="上一篇" class="prev" href="0.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"</a>
+				<a title="下一篇" class="next" href="2.html"></a>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>便捷函数之 C() 方法</title>
+		<link rel="stylesheet" href="../static/css/book.css">
+		<link rel="stylesheet" href="../static/css/prettify.css">
+		<script type="text/javascript" src="../static/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/prettify.js"></script>
+		<script type="text/javascript">
+			$(function(){	
+				$(window).resize(function(){
+					$('.book-content').css('min-height', $(window).height() - 130);
+				}).resize();
+				
+				$('table').TableColor();
+				
+				prettyPrint();
+			});
+			
+			$.fn.TableColor = function(){
+				return $(this).each(function(){
+					if(this.nodeName.toLowerCase() != 'table') return;
+					var self = $(this);
+					self.find('tr').each(function(index) {
+						var _this = $(this);
+						if(index % 2 == 0){
+							_this.addClass('add');
+						} else {
+							_this.addClass('even');	
+						}
+						_this.hover(
+							function(){_this.addClass('hover')},
+							function(){_this.removeClass('hover')}
+						);
+					});	
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="book-title">
+			<h1>便捷函数之 C() 方法</h1>
+			<div class="page">
+				<a title="上一篇" class="prev" href="m.html"></a>
+				<a tilte="返回目录" class="dir"  href="index.html"></a>
+				<a title="下一篇" class="next" href="dump.html"></a>
+			</div>
+		</div>
+		<div class="book-content">
+			<p>
+				C($node)方法进行快速从conf/application.ini文件中读取相应的配置节点<br>
+
+			</p>
+			<div class="tips">
+				$node参数 支持 . 分隔 与 -&gt; 分隔
+			</div>
+			
+			
+			<code class="prettyprint linenums lang-php">
+				//[使用方法如下]<br>
+				 $info = C('application.directory'); //等价于 C('application->directory');<br>
+        		 dump($info);<br>
+
+        		 $info = C('smarty');<br>
+        		 dump($info);
+			</code>
+
+			<div class="warning">
+				[返回值说明]<br>
+				返回值有类型有array,string
+				如果节点不存在则返回 null
+			</div>
+
+			
+		</div>
+	</body>
+</html>
